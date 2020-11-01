@@ -161,8 +161,6 @@ class DataDownloader:
                         self.fullLists[64].append(f'{region}')
 
         toReturn = self.createBigNumpy(lists)
-        print("Columns", type(columns), len(columns))
-        print("GetList", type(toReturn), type(toReturn[0]), len(toReturn), len(toReturn[0]))
         return (columns, toReturn)                    #return it as tuple
 
     def get_list(self, regions = None):
@@ -257,8 +255,6 @@ class DataDownloader:
                     self.memory.update({region: toCache})
         
         final_list = self.createBigNumpy(self.fullLists)
-        print("Columns", type(columns), len(columns))
-        print("GetList", type(final_list), type(final_list[0]), len(final_list), len(final_list[0]))
         return (columns, final_list)
 
     #optional functions
