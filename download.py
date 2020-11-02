@@ -285,3 +285,17 @@ class DataDownloader:
             else:
                 toReturn.append(np.array(fullLists[i], dtype=str))        #convert those lists to numpy arrays with string
         return toReturn
+
+
+if __name__ == "__main__":
+    data = DataDownloader().get_list(['KVK', 'PLK', 'PAK'])
+    print("Columns:")
+    for column in columns:
+        print(column, end=" ")
+    print("\n")
+    print("Entries:")
+    print(len(data[1][0]),"\n")
+    print("Regions:")
+    for region in DataDownloader().memory.keys():
+        print(region, end=" ")
+    print()

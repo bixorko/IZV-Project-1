@@ -1,6 +1,7 @@
 from download import DataDownloader
 from matplotlib import pyplot as plt
 import os
+import argparse
 
 def add_order_to_axs(axs, rects):
     i = 1
@@ -103,7 +104,14 @@ def plot_stat(data_source, fig_location = None, show_figure = False):
     if show_figure:
         plt.show()
 
-data_source = DataDownloader().get_list()
-plot_stat(data_source, fig_location='graphs', show_figure=True)
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(prog='get_stat.py')
 
+    parser.add_argument('--fig_location', default = None, type=str, help='Path, where graph.png will be saved')
+    parser.add_argument('--show_figure', default = False, type=bool, help='Boolean value, which indicates if graph should be opened after execution or not')
+
+    args = parser.parse_args()
+
+    data_source = DataDownloader().get_list()
+    plot_stat(data_source, args.fig_location, args.show_figure)
