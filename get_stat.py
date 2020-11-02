@@ -3,6 +3,11 @@ from matplotlib import pyplot as plt
 import os
 import argparse
 
+def create_ax(axs, i, keys, values, year):
+    rects = axs[i].bar(keys, values)
+    axs[i].set_title(year)
+    add_order_to_axs(axs[i], rects)
+
 def add_order_to_axs(axs, rects):
     i = 1
     for rect in rects:
@@ -77,25 +82,11 @@ def plot_stat(data_source, fig_location = None, show_figure = False):
     fig.tight_layout()
     fig.set_size_inches(6.5, 9.5)
 
-    rects = axs[0].bar(keys1, values1)
-    axs[0].set_title('2016')
-    add_order_to_axs(axs[0], rects)
-
-    rects = axs[1].bar(keys2, values2)
-    axs[1].set_title('2017')
-    add_order_to_axs(axs[1], rects)
-
-    rects = axs[2].bar(keys3, values3)
-    axs[2].set_title('2018')
-    add_order_to_axs(axs[2], rects)
-
-    rects = axs[3].bar(keys4, values4)
-    axs[3].set_title('2019')
-    add_order_to_axs(axs[3], rects)
-
-    rects = axs[4].bar(keys5, values5)
-    axs[4].set_title('2020')
-    add_order_to_axs(axs[4], rects)
+    create_ax(axs, 0, keys1, values1, '2016')
+    create_ax(axs, 1, keys2, values2, '2017')
+    create_ax(axs, 2, keys3, values3, '2018')
+    create_ax(axs, 3, keys4, values4, '2019')
+    create_ax(axs, 4, keys5, values5, '2020')
 
     if fig_location:
         if not os.path.exists(fig_location):
