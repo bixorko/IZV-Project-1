@@ -166,93 +166,52 @@ class DataDownloader:
     def get_list(self, regions = None):
         self.fullLists = [[] for _ in range(65)]
         folders = [f for f in listdir(self.folder) if isfile(join(self.folder, f))]
-        if regions:
-            for region in regions:
-                #if region in memory:
-                if region in self.memory.keys():
-                    returned = self.memory.get(region)[1]  #take only data and not headers 
-                    #add data to final_list from dict(returned)
-                    print("Loading from memory!")
-                    for i in range(65):
-                        self.fullLists[i] += returned[i].tolist() 
-            
-                #if region not in memory and cache is created
-                    #read from cache file
-                    #  filename = self.folder + "/" + self.cache_filename.replace("{}", f"{region}")
-                    #  cachefile = gzip.open(filename, 'rb')
-                    #  loadedCache = pickle.load(cachefile)
-                    #  cachefile.close()
-                    #add loadedCache to dict and then to fullLists
-                elif self.cache_filename.replace("{}", f"{region}") in folders:
-                    filename = self.folder + "/" + self.cache_filename.replace("{}", f"{region}")
-                    cachefile = gzip.open(filename, 'rb')
-                    loadedCache = pickle.load(cachefile)
-                    cachefile.close()
-                    #add to memory
-                    self.memory.update({region: loadedCache})
-                    print("Loading from cache!")
-                    #add to fullLists from loadedCache
-                    for i in range(65):
-                        self.fullLists[i] += loadedCache[1][i].tolist() 
-                #if region not in memory and cache is not created
-                    #call parse_region_data for region
-                    #create cache file
-                    #add data to dict and then to fullLists
-                else:
-                    toCache = self.parse_region_data(region)
-                    print(f"Zipping {region}")
-                    #create cache
-                    filename = self.folder + "/" + self.cache_filename.replace("{}", f"{region}")
-                    f_in = gzip.open(filename, 'wb')
-                    pickle.dump(toCache, f_in)
-                    f_in.close()
-                    #add to memory
-                    print("Loading from XXX")
-                    self.memory.update({region: toCache})
-                    
-        else:
-            for region in regionsDict.values():
-                #if region in memory:
-                if region in self.memory.keys():
-                    returned = self.memory.get(region)[1]  #take only data and not headers 
-                    #add data to final_list from dict(returned)
-                    print(f"Loading from memory! {region}")
-                    for i in range(65):
-                        self.fullLists[i] += returned[i].tolist() 
-            
-                #if region not in memory and cache is created
-                    #read from cache file
-                    #  filename = self.folder + "/" + self.cache_filename.replace("{}", f"{region}")
-                    #  cachefile = gzip.open(filename, 'rb')
-                    #  loadedCache = pickle.load(cachefile)
-                    #  cachefile.close()
-                    #add loadedCache to dict and then to fullLists
-                elif self.cache_filename.replace("{}", f"{region}") in folders:
-                    filename = self.folder + "/" + self.cache_filename.replace("{}", f"{region}")
-                    cachefile = gzip.open(filename, 'rb')
-                    loadedCache = pickle.load(cachefile)
-                    cachefile.close()
-                    #add to memory
-                    self.memory.update({region: loadedCache})
-                    print(f"Loading from cache! {region}")
-                    #add to fullLists from loadedCache
-                    for i in range(65):
-                        self.fullLists[i] += loadedCache[1][i].tolist() 
-                #if region not in memory and cache is not created
-                    #call parse_region_data for region
-                    #create cache file
-                    #add data to dict and then to fullLists
-                else:
-                    toCache = self.parse_region_data(region)
-                    print(f"Zipping {region}")
-                    #create cache
-                    filename = self.folder + "/" + self.cache_filename.replace("{}", f"{region}")
-                    f_in = gzip.open(filename, 'wb')
-                    pickle.dump(toCache, f_in)
-                    f_in.close()
-                    #add to memory
-                    print("Loading from XXX")
-                    self.memory.update({region: toCache})
+        
+        if not regions:
+            regions = list(regionsDict.values())
+    
+        for region in regions:
+            #if region in memory:
+            if region in self.memory.keys():
+                returned = self.memory.get(region)[1]  #take only data and not headers 
+                #add data to final_list from dict(returned)
+                print(f"Loading from memory! {region}")
+                for i in range(65):
+                    self.fullLists[i] += returned[i].tolist() 
+        
+            #if region not in memory and cache is created
+                #read from cache file
+                #  filename = self.folder + "/" + self.cache_filename.replace("{}", f"{region}")
+                #  cachefile = gzip.open(filename, 'rb')
+                #  loadedCache = pickle.load(cachefile)
+                #  cachefile.close()
+                #add loadedCache to dict and then to fullLists
+            elif self.cache_filename.replace("{}", f"{region}") in folders:
+                filename = self.folder + "/" + self.cache_filename.replace("{}", f"{region}")
+                cachefile = gzip.open(filename, 'rb')
+                loadedCache = pickle.load(cachefile)
+                cachefile.close()
+                #add to memory
+                self.memory.update({region: loadedCache})
+                print(f"Loading from cache! {region}")
+                #add to fullLists from loadedCache
+                for i in range(65):
+                    self.fullLists[i] += loadedCache[1][i].tolist() 
+            #if region not in memory and cache is not created
+                #call parse_region_data for region
+                #create cache file
+                #add data to dict and then to fullLists
+            else:
+                toCache = self.parse_region_data(region)
+                print(f"Zipping {region}")
+                #create cache
+                filename = self.folder + "/" + self.cache_filename.replace("{}", f"{region}")
+                f_in = gzip.open(filename, 'wb')
+                pickle.dump(toCache, f_in)
+                f_in.close()
+                #add to memory
+                print(f"Loading from XXX {region}")
+                self.memory.update({region: toCache})
         
         final_list = self.createBigNumpy(self.fullLists)
         return (columns, final_list)
