@@ -210,7 +210,7 @@ class DataDownloader:
                 pickle.dump(toCache, f_in)
                 f_in.close()
                 #add to memory
-                print(f"Loading from XXX")
+                print(f"Loading from XXX {region}")
                 self.memory.update({region: toCache})
         
         final_list = self.createBigNumpy(self.fullLists)
