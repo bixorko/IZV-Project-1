@@ -126,6 +126,7 @@ class DataDownloader:
 
         folders = [f for f in listdir(self.folder) if isfile(join(self.folder, f))]  #take all folders from self.folder/*
         self.download_if_not_exists(folders) #control if we got all files from url
+        folders = [f for f in listdir(self.folder) if isfile(join(self.folder, f))]  #take all folders from self.folder/*
         r = re.compile(r"^(datagis)((-rok-\d{4})|(\d{4})).zip$")   #regex for take only last year folders
         chosenFolders = list(filter(r.match, folders)) #taken last year folders for data comparison
         chosenFolders.append('datagis-09-2020.zip')    #add last month from 2020 #TODO NEED TO CHANGE THIS (if AOctober, then 10 month will be called etc.``)
