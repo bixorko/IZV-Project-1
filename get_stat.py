@@ -92,7 +92,7 @@ def plot_stat(data_source, fig_location = None, show_figure = False):
         fig_location = fig_location.split('/')
         myfile = fig_location[-1]
         fig_location = "/".join(fig_location[0:-1])
-        if not os.path.exists(fig_location):
+        if not os.path.exists(fig_location) and fig_location:
             os.makedirs(fig_location)
         plt.savefig(os.path.join(fig_location, myfile))
         
@@ -108,5 +108,5 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    data_source = DataDownloader().get_list(['PHA'])
+    data_source = DataDownloader().get_list()
     plot_stat(data_source, args.fig_location, args.show_figure)
