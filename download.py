@@ -96,7 +96,7 @@ def getRegionID(val):
 class DataDownloader:
     #CLASS VARIABLES
     memory = {}
-    fullLists = []
+    fullLists = [[] for _ in range(65)]
 
     def __init__(self, url='https://ehw.fit.vutbr.cz/izv/',folder='data', cache_filename='data_{}.pkl.gz'):
         self.url = url
@@ -118,7 +118,7 @@ class DataDownloader:
                     for chunk in r.iter_content(chunk_size=128):
                         fd.write(chunk)
 
-    def parse_region_data(self, region):       
+    def parse_region_data(self, region):    
         regionID = getRegionID(region)
 
         lists = [[] for _ in range(65)] #initialize empty 64 lists (then converted to numpy arrays) maybe create new function for this because it must be called only one time
@@ -165,7 +165,7 @@ class DataDownloader:
         return (columns, toReturn)                    #return it as tuple
 
     def get_list(self, regions = None):
-        self.fullLists = [[] for _ in range(65)]
+        #self.fullLists = [[] for _ in range(65)]
         folders = [f for f in listdir(self.folder) if isfile(join(self.folder, f))]
         
         if not regions:
@@ -215,6 +215,7 @@ class DataDownloader:
                 self.memory.update({region: toCache})
         
         final_list = self.createBigNumpy(self.fullLists)
+        self.fullLists = [[] for _ in range(65)]
         return (columns, final_list)
 
     #optional functions
@@ -246,7 +247,6 @@ class DataDownloader:
                 toReturn.append(np.array(fullLists[i], dtype=str))        #convert those lists to numpy arrays with string
         return toReturn
 
-
 if __name__ == "__main__":
     data = DataDownloader().get_list(['KVK', 'PLK', 'PAK'])
     print("Columns:")
@@ -259,3 +259,4 @@ if __name__ == "__main__":
     for region in DataDownloader().memory.keys():
         print(region, end=" ")
     print()
+    
