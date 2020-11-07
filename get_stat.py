@@ -89,9 +89,13 @@ def plot_stat(data_source, fig_location = None, show_figure = False):
     create_ax(axs, 4, keys5, values5, '2020')
 
     if fig_location:
+        fig_location = fig_location.split('/')
+        myfile = fig_location[-1]
+        fig_location = "/".join(fig_location[0:-1])
         if not os.path.exists(fig_location):
             os.makedirs(fig_location)
-        plt.savefig(f'{fig_location}/graph.png')
+        plt.savefig(os.path.join(fig_location, myfile))
+        
     if show_figure:
         plt.show()
 
@@ -104,5 +108,5 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    data_source = DataDownloader().get_list()
+    data_source = DataDownloader().get_list(['PHA'])
     plot_stat(data_source, args.fig_location, args.show_figure)
