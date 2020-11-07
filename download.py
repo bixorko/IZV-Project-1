@@ -165,7 +165,6 @@ class DataDownloader:
         return (columns, toReturn)                    #return it as tuple
 
     def get_list(self, regions = None):
-        #self.fullLists = [[] for _ in range(65)]
         folders = [f for f in listdir(self.folder) if isfile(join(self.folder, f))]
         
         if not regions:
@@ -259,4 +258,3 @@ if __name__ == "__main__":
     for region in DataDownloader().memory.keys():
         print(region, end=" ")
     print()
-    
