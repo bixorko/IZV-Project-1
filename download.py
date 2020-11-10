@@ -106,17 +106,21 @@ class DataDownloader:
         self.cache_filename = cache_filename
 
     def download_data(self): #this function downloads all .zip files from url https://ehw.fit.vutbr.cz/izv/
+        toDownload = ['data/datagis2016.zip', 'data/datagis-rok-2017.zip', 'data/datagis-rok-2018.zip', 'data/datagis-rok-2019.zip']
         headers = headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36', 'Upgrade-Insecure-Requests': '1','DNT': '1','Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8','Accept-Language': 'en-US,en;q=0.5','Accept-Encoding': 'gzip, deflate'}
         html = requests.get(self.url, headers = headers) #add headers to simulate communication as browser (avoid script detector)
         soup = BeautifulSoup(html.text, 'html.parser')
-        for link in soup.find_all('a', href=True):
+        links = soup.find_all('a', href=True)
+        toDownload.append(links[-1]['href'])
+        for link in links:
             href = link['href']
             if href.endswith('.zip'):
-                print(f'Downloading: {os.path.join(self.folder, href[5:])}')
-                r = requests.get(self.url + href, stream=True)
-                with open(os.path.join(self.folder, href[5:]), 'wb') as fd:
-                    for chunk in r.iter_content(chunk_size=128):
-                        fd.write(chunk)
+                if href in toDownload:
+                    print(f'Downloading: {os.path.join(self.folder, href[5:])}')
+                    r = requests.get(self.url + href, stream=True)
+                    with open(os.path.join(self.folder, href[5:]), 'wb') as fd:
+                        for chunk in r.iter_content(chunk_size=128):
+                            fd.write(chunk)
 
     def parse_region_data(self, region):    
         regionID = getRegionID(region)
@@ -222,18 +226,22 @@ class DataDownloader:
         function for redownload missing .zip files [06,08], [07 missing so it downloads it]
     '''
     def download_if_not_exists(self, folders):
+        toDownload = ['data/datagis2016.zip', 'data/datagis-rok-2017.zip', 'data/datagis-rok-2018.zip', 'data/datagis-rok-2019.zip']
         headers = headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36', 'Upgrade-Insecure-Requests': '1','DNT': '1','Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8','Accept-Language': 'en-US,en;q=0.5','Accept-Encoding': 'gzip, deflate'}
         html = requests.get(self.url, headers = headers) #add headers to simulate communication as browser (avoid script detector)
         soup = BeautifulSoup(html.text, 'html.parser')
-        for link in soup.find_all('a', href=True):
+        links = soup.find_all('a', href=True)
+        toDownload.append(links[-1]['href'])
+        for link in links:
             href = link['href']
             if href.endswith('.zip'):
-                if href[5:] not in folders:
-                    print(f'Downloading: {os.path.join(self.folder, href[5:])}')
-                    r = requests.get(self.url + href, stream=True)
-                    with open(os.path.join(self.folder, href[5:]), 'wb') as fd:
-                        for chunk in r.iter_content(chunk_size=128):
-                            fd.write(chunk)
+                if href in toDownload:
+                    if href[5:] not in folders:
+                        print(f'Downloading: {os.path.join(self.folder, href[5:])}')
+                        r = requests.get(self.url + href, stream=True)
+                        with open(os.path.join(self.folder, href[5:]), 'wb') as fd:
+                            for chunk in r.iter_content(chunk_size=128):
+                                fd.write(chunk)
 
     def createBigNumpy(self, fullLists):  #this function converts list to numpy array
         toReturn = []
